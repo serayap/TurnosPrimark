@@ -21,16 +21,17 @@
     import { initializeApp } from "firebase/app";
     import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
-    // Configuración de tu proyecto (la obtienes al registrar tu Web App en la consola)
+    // Configuración de tu proyecto (la obtienes al registrar tu Web App en la consola)    
     const firebaseConfig = {
-      apiKey: "TU_API_KEY",
+      apiKey: "AIzaSyC-ZXBeOtmK4L31KW2xI1Biv_r2jnyLKT0",
       authDomain: "turnosprimark.firebaseapp.com",
       projectId: "turnosprimark",
       storageBucket: "turnosprimark.firebasestorage.app",
       messagingSenderId: "162804882971",
-      appId: "TU_APP_ID"
+      appId: "1:162804882971:web:ee5b525065bddfd843e2be",
+      measurementId: "G-Q0H4W1RJBJ"
     };
-
+    
     // Inicializar Firebase y obtener referencia de Authentication
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
