@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Acceso TurnosPrimark</title>
+</head>
+<body>
+  <h2>Iniciar Sesión - TurnosPrimark</h2>
+  
+  <form id="loginForm">
+    <input type="email" id="email" placeholder="Correo electrónico" required><br><br>
+    <input type="password" id="password" placeholder="Contraseña" required><br><br>
+    <button type="submit">Entrar</button>
+  </form>
+
+  <!-- Párrafo para mostrar errores de autenticación -->
+  <p id="mensajeError" style="color: red;"></p>
+
+  <script type="module">
+    // Importamos las funciones necesarias del SDK modular de Firebase
+    import { initializeApp } from "firebase/app";
+    import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+
+    // Configuración de tu proyecto (la obtienes al registrar tu Web App en la consola)
+    const firebaseConfig = {
+      apiKey: "TU_API_KEY",
+      authDomain: "turnosprimark.firebaseapp.com",
+      projectId: "turnosprimark",
+      storageBucket: "turnosprimark.firebasestorage.app",
+      messagingSenderId: "162804882971",
+      appId: "TU_APP_ID"
+    };
+
+    // Inicializar Firebase y obtener referencia de Authentication
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Escuchar el evento de envío del formulario
+    document.getElementById("loginForm").addEventListener("submit", (e) => {
+      e.preventDefault(); // Evita que la página web se recargue
+
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const mensajeError = document.getElementById("mensajeError");
+      
+      mensajeError.textContent = ""; // Limpiar errores previos
+
+      // Intentar iniciar sesión con correo y contraseña
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          alert("¡Acceso correcto! Bienvenido.");
+          
+          // Aquí puedes redirigir al empleado a la página de sus turnos:
+          // window.location.href = "turnos.html";
+        })
+        .catch((error) => {
+          console.error("Error al iniciar sesión:", error);
+          // Personalizamos la respuesta según el tipo de error
+          if (error.code === "auth/invalid-credential") {
+            mensajeError.textContent = "El correo o la contraseña son incorrectos.";
+          } else {
+            mensajeError.textContent = "Ha ocurrido un error al intentar acceder.";
+          }
+        });
+    });
+  </script>
+</body>
+</html>
