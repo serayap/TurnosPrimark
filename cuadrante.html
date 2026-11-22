@@ -118,7 +118,7 @@
 
     async function loadSchedules() {
       try {
-        const snapshot = await getDocs(collection(db, "Horarios"));
+        const snapshot = await getDocs(collection(db, "Horarios"), orderBy("Orden", "asc"));
         shiftSelect.innerHTML = '<option value="">Selecciona un turno</option>';
         snapshot.forEach(documentSnapshot => {
           const schedule = documentSnapshot.data();
