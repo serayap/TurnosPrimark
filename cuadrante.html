@@ -145,6 +145,14 @@
           fechaHasta: end.toDate()
         });
         const snapshot = await getDocs(q);
+        console.log("Cantidad de turnos:", snapshot.size);
+        console.log(
+          "Registros encontrados:",
+          snapshot.docs.map(documentSnapshot => ({
+            id: documentSnapshot.id,
+            ...documentSnapshot.data()
+          }))
+        );
         snapshot.forEach(documentSnapshot => { const shift = documentSnapshot.data(); const date = shift.Fecha.toDate(); shiftsByDate.set(dateKey(date), { start: shift.HoraInicio, end: shift.HoraFin }); });
         renderCalendar();
       } catch (error) { console.error("Error al cargar los turnos:", error); formStatus.textContent = "No se pudieron cargar los turnos del mes."; formStatus.className = "status error"; renderCalendar(); }
