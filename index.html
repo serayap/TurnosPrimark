@@ -130,7 +130,7 @@
       signInWithEmailAndPassword(auth, email, password)
         .then(() => {
           alert("¡Acceso correcto! Bienvenido.");
-          // window.location.href = "turnos.html";
+          window.location.href = "cuadrante.html";
         })
         .catch((err) => {
           msgError.textContent = err.code === "auth/invalid-credential" 
