@@ -82,6 +82,7 @@
             userNameDiv.textContent = `${datosEmpleado.nombre} ${datosEmpleado.apellidos}`;
           } else {
             // Respaldo en caso de que el correo no exista en la colección "empleados"
+            console.log("no existe el nombre en empleados);
             userNameDiv.textContent = user.email;
           }
         } catch (error) {
