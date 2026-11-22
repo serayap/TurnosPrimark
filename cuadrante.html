@@ -78,8 +78,8 @@
           if (!querySnapshot.empty) {
             // Tomamos el primer registro encontrado y unimos nombre y apellidos
             const datosEmpleado = querySnapshot.docs[0].data();
-            console.log(datosEmpleado.nombre);
-            userNameDiv.textContent = `${datosEmpleado.nombre} ${datosEmpleado.apellidos}`;
+            console.log(datosEmpleado.Nombre);
+            userNameDiv.textContent = `${datosEmpleado.Nombre} ${datosEmpleado.Apellidos}`;
           } else {
             // Respaldo en caso de que el correo no exista en la colección "empleados"
             console.log("no existe el nombre en empleados");
