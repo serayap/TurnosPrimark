@@ -138,6 +138,12 @@
       const end = Timestamp.fromDate(new Date(year, month + 1, 1, 0, 0, 0, 0));
       try {
         const q = query(collection(db, "Turnos"), where("EmpleadoId", "==", currentEmployeeId), where("Fecha", ">=", start), where("Fecha", "<", end));
+        console.log("Consulta Firestore:", q);
+        console.log("Parámetros:", {
+          empleadoId: currentEmployeeId,
+          fechaDesde: start.toDate(),
+          fechaHasta: end.toDate()
+        });
         const snapshot = await getDocs(q);
         snapshot.forEach(documentSnapshot => { const shift = documentSnapshot.data(); const date = shift.Fecha.toDate(); shiftsByDate.set(dateKey(date), { start: shift.HoraInicio, end: shift.HoraFin }); });
         renderCalendar();
