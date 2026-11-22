@@ -9,7 +9,7 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; }
     body { background-color: var(--p-light); color: var(--p-dark); min-height: 100vh; padding: 20px; }
     .container { max-width: 800px; margin: 0 auto; background: var(--white); padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-    .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--p-light); padding-bottom: 15px; margin-bottom: 20px; }
+    .header { position: relative; text-align: center; border-bottom: 2px solid var(--p-light); padding-bottom: 20px; margin-bottom: 30px;  }
     .header h2 { color: var(--p-blue); font-weight: 300; letter-spacing: 2px; text-transform: uppercase; }
     .btn { background: var(--p-blue); color: var(--white); border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; }
     .btn-out { background: #E74C3C; }
@@ -75,7 +75,8 @@
     function renderCalendar() {
       const year = currentDate.getFullYear();
       const month = currentDate.getMonth();
-      monthYearTitle.textContent = currentDate.toLocaleDateString("es-ES", { month: "long", year: "numeric" });
+      const textoFecha = currentDate.toLocaleDateString("es-ES", { month: "long", year: "numeric" });
+      monthYearTitle.textContent = textoFecha.replace(" de ", " ");
 
       calendarDays.innerHTML = "";
       
