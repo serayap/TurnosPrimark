@@ -123,7 +123,7 @@
         snapshot.forEach(documentSnapshot => {
           const schedule = documentSnapshot.data();
           if (!schedule.HoraInicio || !schedule.HoraFin) return;
-          const option = document.createElement("option"); option.value = documentSnapshot.id; option.textContent = `${formatTime(schedule.HoraInicio)} - ${formatTime(schedule.HoraFin)`;
+          const option = document.createElement("option"); option.value = documentSnapshot.id; option.textContent = `${formatTime(schedule.HoraInicio)} - ${formatTime(schedule.HoraFin)}`;
           option.dataset.start = schedule.HoraInicio.toMillis(); option.dataset.end = schedule.HoraFin.toMillis(); shiftSelect.appendChild(option);
         });
         shiftSelect.disabled = snapshot.empty;
