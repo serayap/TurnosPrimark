@@ -2,69 +2,143 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Acceso TurnosPrimark</title>
+  <style>
+    :root {
+      --primark-blue: #00AEDB;
+      --primark-dark: #1E2229;
+      --primark-light: #F5F3F2;
+      --white: #FFFFFF;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; }
+    body {
+      background-color: var(--primark-light);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .login-card {
+      background-color: var(--white);
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+      width: 100%;
+      max-width: 400px;
+      padding: 40px 30px;
+      text-align: center;
+    }
+    .logo {
+      font-size: 30px;
+      font-weight: 300;
+      color: var(--primark-blue);
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+    .subtitle {
+      font-size: 13px;
+      color: var(--primark-dark);
+      opacity: 0.6;
+      margin-bottom: 30px;
+      letter-spacing: 1px;
+    }
+    .form-group { margin-bottom: 20px; text-align: left; }
+    label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      color: var(--primark-dark);
+      letter-spacing: 1px;
+    }
+    input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid #DCD8D6;
+      border-radius: 8px;
+      font-size: 15px;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+    input:focus {
+      border-color: var(--primark-blue);
+      box-shadow: 0 0 0 3px rgba(0, 174, 219, 0.15);
+    }
+    button {
+      width: 100%;
+      background-color: var(--primark-blue);
+      color: var(--white);
+      border: none;
+      border-radius: 8px;
+      padding: 14px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      margin-top: 10px;
+      letter-spacing: 1px;
+    }
+    button:hover { background-color: #0099c2; }
+    .error { color: #E74C3C; font-size: 13px; margin-top: 15px; }
+  </style>
 </head>
 <body>
-  <h2>Iniciar Sesión - TurnosPrimark</h2>
-  
-  <form id="loginForm">
-    <input type="email" id="email" placeholder="Correo electrónico" required><br><br>
-    <input type="password" id="password" placeholder="Contraseña" required><br><br>
-    <button type="submit">Entrar</button>
-  </form>
-
-  <!-- Párrafo para mostrar errores de autenticación -->
-  <p id="mensajeError" style="color: red;"></p>
+  <div class="login-card">
+    <div class="logo">Primark</div>
+    <div class="subtitle">Gestión de Turnos y Cuadrantes</div>
+    
+    <form id="loginForm">
+      <div class="form-group">
+        <label>Correo electrónico</label>
+        <input type="email" id="email" required placeholder="ejemplo@primark.com">
+      </div>
+      <div class="form-group">
+        <label>Contraseña</label>
+        <input type="password" id="password" required placeholder="••••••••">
+      </div>
+      <button type="submit">Iniciar Sesión</button>
+    </form>
+    <p id="mensajeError" class="error"></p>
+  </div>
 
   <script type="module">
-    // Importamos las funciones necesarias del SDK modular de Firebase
     import { initializeApp } from "firebase/app";
     import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
-    // Configuración de tu proyecto (la obtienes al registrar tu Web App en la consola)    
     const firebaseConfig = {
-      apiKey: "AIzaSyC-ZXBeOtmK4L31KW2xI1Biv_r2jnyLKT0",
+      apiKey: "TU_API_KEY",
       authDomain: "turnosprimark.firebaseapp.com",
       projectId: "turnosprimark",
       storageBucket: "turnosprimark.firebasestorage.app",
       messagingSenderId: "162804882971",
-      appId: "1:162804882971:web:ee5b525065bddfd843e2be",
-      measurementId: "G-Q0H4W1RJBJ"
+      appId: "TU_APP_ID"
     };
-    
-    // Inicializar Firebase y obtener referencia de Authentication
+
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    // Escuchar el evento de envío del formulario
     document.getElementById("loginForm").addEventListener("submit", (e) => {
-      e.preventDefault(); // Evita que la página web se recargue
-
+      e.preventDefault();
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
-      const mensajeError = document.getElementById("mensajeError");
-      
-      mensajeError.textContent = ""; // Limpiar errores previos
+      const msgError = document.getElementById("mensajeError");
+      msgError.textContent = "";
 
-      // Intentar iniciar sesión con correo y contraseña
       signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          const user = userCredential.user;
+        .then(() => {
           alert("¡Acceso correcto! Bienvenido.");
-          
-          // Aquí puedes redirigir al empleado a la página de sus turnos:
           // window.location.href = "turnos.html";
         })
-        .catch((error) => {
-          console.error("Error al iniciar sesión:", error);
-          // Personalizamos la respuesta según el tipo de error
-          if (error.code === "auth/invalid-credential") {
-            mensajeError.textContent = "El correo o la contraseña son incorrectos.";
-          } else {
-            mensajeError.textContent = "Ha ocurrido un error al intentar acceder.";
-          }
+        .catch((err) => {
+          msgError.textContent = err.code === "auth/invalid-credential" 
+            ? "El correo o la contraseña son incorrectos." 
+            : "Error de autenticación.";
         });
     });
   </script>
 </body>
 </html>
+
