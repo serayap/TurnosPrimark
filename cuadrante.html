@@ -72,7 +72,7 @@
         
         try {
           // Buscamos en la colección "empleados" al usuario con ese correo
-          const q = query(collection(db, "empleados"), where("correo", "==", user.email));
+          const q = query(collection(db, "Empleados"), where("Correo", "==", user.email));
           const querySnapshot = await getDocs(q);
           
           if (!querySnapshot.empty) {
