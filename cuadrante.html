@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Cuadrante - Primark</title>
+  <style>
+    :root { --p-blue: #00AEDB; --p-dark: #1E2229; --p-light: #F5F3F2; --white: #FFF; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; }
+    body { background-color: var(--p-light); color: var(--p-dark); min-height: 100vh; padding: 20px; }
+    .container { max-width: 800px; margin: 0 auto; background: var(--white); padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+    .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--p-light); padding-bottom: 15px; margin-bottom: 20px; }
+    .header h2 { color: var(--p-blue); font-weight: 300; letter-spacing: 2px; text-transform: uppercase; }
+    .btn { background: var(--p-blue); color: var(--white); border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; }
+    .btn-out { background: #E74C3C; }
+    .nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .month-title { font-size: 20px; font-weight: 600; text-transform: capitalize; }
+    .grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; text-align: center; }
+    .day-name { font-weight: 600; font-size: 13px; color: #7E7C7A; padding: 10px 0; text-transform: uppercase; }
+    .day { background: var(--p-light); padding: 15px 5px; border-radius: 8px; font-weight: 500; min-height: 70px; display: flex; flex-direction: column; justify-content: space-between; }
+    .day.empty { background: transparent; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h2>Primark</h2>
+      <button class="btn btn-out" id="logoutBtn">Cerrar Sesión</button>
+    </div>
+
+    <div class="nav">
+      <button class="btn" id="prevMonth">◀ Anterior</button>
+      <div class="month-title" id="monthYear"></div>
+      <button class="btn" id="nextMonth">Siguiente ▶</button>
+    </div>
+
+    <div class="grid" id="weekHeaders">
+      <div class="day-name">Lun</div><div class="day-name">Mar</div><div class="day-name">Mié</div>
+      <div class="day-name">Jue</div><div class="day-name">Vie</div><div class="day-name">Sáb</div><div class="day-name">Dom</div>
+    </div>
+    <div class="grid" id="calendarDays"></div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "firebase/app";
+    import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+
+    const firebaseConfig = {
+      apiKey: "TU_API_KEY",
+      authDomain: "turnosprimark.firebaseapp.com",
+      projectId: "turnosprimark",
+      storageBucket: "turnosprimark.firebasestorage.app",
+      messagingSenderId: "162804882971",
+      appId: "TU_APP_ID"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // 1. Proteger ruta: redirigir a index.html si no está autenticado [2.6.4]
+    onAuthStateChanged(auth, (user) => {
+      if (!user) window.location.href = "index.html";
+    });
+
+    // 2. Cerrar Sesión
+    document.getElementById("logoutBtn").addEventListener("click", () => signOut(auth));
+
+    // 3. Renderizar Calendario
+    const calendarDays = document.getElementById("calendarDays");
+    const monthYearTitle = document.getElementById("monthYear");
+    let currentDate = new Date();
+
+    function renderCalendar() {
+      const year = currentDate.getFullYear();
+      const month = currentDate.getMonth();
+      monthYearTitle.textContent = currentDate.toLocaleDateString("es-ES", { month: "long", year: "numeric" });
+
+      calendarDays.innerHTML = "";
+      
+      const firstDayIndex = (new Date(year, month, 1).getDay() + 6) % 7; // Ajuste lunes inicio
+      const totalDays = new Date(year, month + 1, 0).getDate();
+
+      for (let i = 0; i < firstDayIndex; i++) {
+        calendarDays.appendChild(Object.assign(document.createElement("div"), { className: "day empty" }));
+      }
+
+      for (let day = 1; day <= totalDays; day++) {
+        calendarDays.appendChild(Object.assign(document.createElement("div"), { className: "day", textContent: day }));
+      }
+    }
+
+    document.getElementById("prevMonth").addEventListener("click", () => { currentDate.setMonth(currentDate.getMonth() - 1); renderCalendar(); });
+    document.getElementById("nextMonth").addEventListener("click", () => { currentDate.setMonth(currentDate.getMonth() + 1); renderCalendar(); });
+
+    renderCalendar();
+  </script>
+</body>
+</html>
