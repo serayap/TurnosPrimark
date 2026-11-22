@@ -6,178 +6,53 @@
   <title>Mi Cuadrante - Primark</title>
   <style>
     :root { --p-blue: #00AEDB; --p-dark: #1E2229; --p-light: #F5F3F2; --white: #FFF; }
-
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-
-    body {
-      min-height: 100vh;
-      min-height: 100dvh;
-      padding: clamp(12px, 3vw, 20px);
-      background: var(--p-light);
-      color: var(--p-dark);
-    }
-
-    .container {
-      width: min(800px, 100%);
-      margin: 0 auto;
-      padding: clamp(16px, 4vw, 30px);
-      background: var(--white);
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    }
-
-    .header {
-      position: relative;
-      margin-bottom: 30px;
-      padding-bottom: 20px;
-      text-align: center;
-      border-bottom: 2px solid var(--p-light);
-    }
-
-    .header h2 {
-      color: var(--p-blue);
-      font-size: clamp(32px, 8vw, 42px);
-      font-weight: 300;
-      letter-spacing: clamp(4px, 2vw, 8px);
-      text-transform: uppercase;
-    }
-
-    .header h3 {
-      color: var(--p-blue);
-      font-size: clamp(14px, 3vw, 16px);
-      font-weight: 200;
-      letter-spacing: 2px;
-    }
-
-    .btn {
-      min-height: 44px;
-      padding: 8px 16px;
-      border: none;
-      border-radius: 6px;
-      background: var(--p-blue);
-      color: var(--white);
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .btn-out {
-      position: absolute;
-      top: 0;
-      right: 0;
-      min-height: 36px;
-      padding: 6px 12px;
-      background: #E74C3C;
-      font-size: 12px;
-    }
-
-    .nav {
-      display: grid;
-      grid-template-columns: minmax(90px, auto) 1fr minmax(90px, auto);
-      gap: 8px;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-
-    .month-title {
-      font-size: clamp(16px, 4vw, 20px);
-      font-weight: 600;
-      text-align: center;
-      text-transform: capitalize;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(7, minmax(0, 1fr));
-      gap: clamp(4px, 1.5vw, 8px);
-      text-align: center;
-    }
-
-    .day-name {
-      padding: 10px 0;
-      color: #7E7C7A;
-      font-size: clamp(10px, 2.5vw, 13px);
-      font-weight: 600;
-      text-transform: uppercase;
-    }
-
-    .day {
-      min-width: 0;
-      min-height: clamp(52px, 10vw, 70px);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: clamp(8px, 2vw, 15px) 3px;
-      border-radius: 8px;
-      background: var(--p-light);
-      font-size: clamp(12px, 3vw, 16px);
-      font-weight: 500;
-    }
-
-    .day.empty { background: transparent; }
-
-    .user-name {
-      margin-top: 6px;
-      color: var(--p-dark);
-      font-size: clamp(12px, 3vw, 14px);
-      font-weight: 500;
-      letter-spacing: 0.5px;
-      opacity: 0.7;
-      overflow-wrap: anywhere;
-    }
-
+    body { min-height: 100vh; min-height: 100dvh; padding: clamp(12px, 3vw, 20px); background: var(--p-light); color: var(--p-dark); }
+    .container { width: min(800px, 100%); margin: 0 auto; padding: clamp(16px, 4vw, 30px); background: var(--white); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+    .header { position: relative; margin-bottom: 30px; padding-bottom: 20px; text-align: center; border-bottom: 2px solid var(--p-light); }
+    .header h2 { color: var(--p-blue); font-size: clamp(32px, 8vw, 42px); font-weight: 300; letter-spacing: clamp(4px, 2vw, 8px); text-transform: uppercase; }
+    .header h3 { color: var(--p-blue); font-size: clamp(14px, 3vw, 16px); font-weight: 200; letter-spacing: 2px; }
+    .btn { min-height: 44px; padding: 8px 16px; border: none; border-radius: 6px; background: var(--p-blue); color: var(--white); font-weight: 600; cursor: pointer; }
+    .btn:disabled { cursor: not-allowed; opacity: 0.5; }
+    .btn-out { position: absolute; top: 0; right: 0; min-height: 36px; padding: 6px 12px; background: #E74C3C; font-size: 12px; }
+    .nav { display: grid; grid-template-columns: minmax(90px, auto) 1fr minmax(90px, auto); gap: 8px; align-items: center; margin-bottom: 20px; }
+    .month-title { font-size: clamp(16px, 4vw, 20px); font-weight: 600; text-align: center; text-transform: capitalize; }
+    .grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: clamp(4px, 1.5vw, 8px); text-align: center; }
+    .day-name { padding: 10px 0; color: #7E7C7A; font-size: clamp(10px, 2.5vw, 13px); font-weight: 600; text-transform: uppercase; }
+    .day { min-width: 0; min-height: clamp(52px, 10vw, 70px); display: flex; flex-direction: column; justify-content: space-between; padding: clamp(8px, 2vw, 15px) 3px; border: 2px solid transparent; border-radius: 8px; background: var(--p-light); font-size: clamp(12px, 3vw, 16px); font-weight: 500; cursor: pointer; }
+    .day:hover { border-color: rgba(0, 174, 219, 0.35); }
+    .day.selected { border-color: var(--p-blue); background: #DDF5FC; }
+    .day.has-shift { background: #E8F7FB; }
+    .day.empty { background: transparent; cursor: default; }
+    .shift-label { margin-top: 4px; color: #28758A; font-size: clamp(9px, 2vw, 11px); line-height: 1.1; }
+    .user-name { margin-top: 6px; color: var(--p-dark); font-size: clamp(12px, 3vw, 14px); font-weight: 500; letter-spacing: 0.5px; opacity: 0.7; overflow-wrap: anywhere; }
+    .shift-form { margin-top: 24px; padding-top: 20px; border-top: 2px solid var(--p-light); }
+    .selected-dates { min-height: 24px; margin-bottom: 12px; color: #4B5563; font-size: 14px; overflow-wrap: anywhere; }
+    .form-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: end; }
+    .field label { display: block; margin-bottom: 6px; font-size: 12px; font-weight: 700; }
+    .field select { width: 100%; min-height: 44px; padding: 8px 12px; border: 1px solid #DCD8D6; border-radius: 6px; background: white; color: var(--p-dark); font: inherit; }
+    .status { min-height: 20px; margin-top: 10px; font-size: 13px; }
+    .status.success { color: #137A42; }
+    .status.error { color: #C0392B; }
     @media (max-width: 600px) {
       .header { padding-top: 48px; }
-
-      .btn-out {
-        left: 50%;
-        right: auto;
-        width: fit-content;
-        transform: translateX(-50%);
-      }
-
-      .nav {
-        grid-template-columns: 44px 1fr 44px;
-      }
-
-      .nav .btn {
-        width: 44px;
-        padding: 8px 4px;
-        overflow: hidden;
-        font-size: 0;
-      }
-
+      .btn-out { left: 50%; right: auto; width: fit-content; transform: translateX(-50%); }
+      .nav { grid-template-columns: 44px 1fr 44px; }
+      .nav .btn { width: 44px; padding: 8px 4px; overflow: hidden; font-size: 0; }
       #prevMonth::before { content: "◀"; font-size: 16px; }
       #nextMonth::before { content: "▶"; font-size: 16px; }
-
-      .day-name:nth-child(1)::before { content: "L"; }
-      .day-name:nth-child(2)::before { content: "M"; }
-      .day-name:nth-child(3)::before { content: "X"; }
-      .day-name:nth-child(4)::before { content: "J"; }
-      .day-name:nth-child(5)::before { content: "V"; }
-      .day-name:nth-child(6)::before { content: "S"; }
-      .day-name:nth-child(7)::before { content: "D"; }
-      .day-name { font-size: 12px; }
       .day-name { font-size: 0; }
       .day-name::before { font-size: 12px; }
+      .day-name:nth-child(1)::before { content: "L"; }.day-name:nth-child(2)::before { content: "M"; }.day-name:nth-child(3)::before { content: "X"; }.day-name:nth-child(4)::before { content: "J"; }.day-name:nth-child(5)::before { content: "V"; }.day-name:nth-child(6)::before { content: "S"; }.day-name:nth-child(7)::before { content: "D"; }
+      .form-row { grid-template-columns: 1fr; }.form-row .btn { width: 100%; }
     }
-
-    @media (max-width: 360px) {
-      body { padding: 8px; }
-      .container { padding: 12px; }
-      .grid { gap: 3px; }
-      .day { min-height: 48px; }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      * { scroll-behavior: auto; }
-    }
+    @media (max-width: 360px) { body { padding: 8px; }.container { padding: 12px; }.grid { gap: 3px; }.day { min-height: 48px; } }
   </style>
 </head>
 <body>
   <main class="container">
     <header class="header">
-      <h2>Primark</h2>
-      <h3 id="nameCenter">Cargando centro...</h3>
+      <h2>Primark</h2><h3 id="nameCenter">Cargando centro...</h3>
       <div id="userName" class="user-name">Cargando usuario...</div>
       <button class="btn btn-out" id="logoutBtn">Cerrar Sesión</button>
     </header>
@@ -189,96 +64,304 @@
     </nav>
 
     <div class="grid" id="weekHeaders" aria-hidden="true">
-      <div class="day-name">Lun</div><div class="day-name">Mar</div><div class="day-name">Mié</div>
-      <div class="day-name">Jue</div><div class="day-name">Vie</div><div class="day-name">Sáb</div><div class="day-name">Dom</div>
+      <div class="day-name">Lun</div><div class="day-name">Mar</div><div class="day-name">Mié</div><div class="day-name">Jue</div><div class="day-name">Vie</div><div class="day-name">Sáb</div><div class="day-name">Dom</div>
     </div>
     <div class="grid" id="calendarDays"></div>
+
+    <section class="shift-form" aria-label="Añadir turno">
+      <div id="selectedDates" class="selected-dates">Selecciona uno o varios días del calendario.</div>
+      <div class="form-row">
+        <div class="field">
+          <label for="shiftSelect">Turno</label>
+          <select id="shiftSelect" disabled><option value="">Cargando horarios...</option></select>
+        </div>
+        <button class="btn" id="addShiftBtn" disabled>Añadir</button>
+      </div>
+      <div id="formStatus" class="status" role="status"></div>
+    </section>
   </main>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-    import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+    import { getFirestore, collection, query, where, getDocs, addDoc, Timestamp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyC-ZXBeOtmK4L31KW2xI1Biv_r2jnyLKT0",
-      authDomain: "turnosprimark.firebaseapp.com",
-      projectId: "turnosprimark",
-      storageBucket: "turnosprimark.firebasestorage.app",
-      messagingSenderId: "162804882971",
-      appId: "1:162804882971:web:ee5b525065bddfd843e2be",
-      measurementId: "G-Q0H4W1RJBJ"
-    };
+    const firebaseConfig = { apiKey: "AIzaSyC-ZXBeOtmK4L31KW2xI1Biv_r2jnyLKT0", authDomain: "turnosprimark.firebaseapp.com", projectId: "turnosprimark", storageBucket: "turnosprimark.firebasestorage.app", messagingSenderId: "162804882971", appId: "1:162804882971:web:ee5b525065bddfd843e2be", measurementId: "G-Q0H4W1RJBJ" };
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        window.location.href = "index.html";
-      } else {
-        const userNameDiv = document.getElementById("userName");
-        const centerDiv = document.getElementById("nameCenter");
-
-        try {
-          const q = query(collection(db, "Empleados"), where("Correo", "==", user.email));
-          const querySnapshot = await getDocs(q);
-
-          if (!querySnapshot.empty) {
-            const datosEmpleado = querySnapshot.docs[0].data();
-            userNameDiv.textContent = `${datosEmpleado.Nombre} ${datosEmpleado.Apellidos}`;
-            centerDiv.textContent = `${datosEmpleado.Centro} ${datosEmpleado.Provincia}`;
-          } else {
-            userNameDiv.textContent = user.email;
-          }
-        } catch (error) {
-          console.error("Error al obtener los datos del empleado:", error);
-          userNameDiv.textContent = user.email;
-        }
-
-        renderCalendar();
-      }
-    });
-
-    document.getElementById("logoutBtn").addEventListener("click", () => signOut(auth));
-
     const calendarDays = document.getElementById("calendarDays");
     const monthYearTitle = document.getElementById("monthYear");
+    const selectedDatesDiv = document.getElementById("selectedDates");
+    const shiftSelect = document.getElementById("shiftSelect");
+    const addShiftBtn = document.getElementById("addShiftBtn");
+    const formStatus = document.getElementById("formStatus");
+
     let currentDate = new Date();
+    let currentEmployeeId = null;
+    let selectedDates = [];
+    let shiftsByDate = new Map();
+
+    function dateKey(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    }
+
+    function formatDate(date) {
+      return date.toLocaleDateString("es-ES", { weekday: "short", day: "2-digit", month: "2-digit", year: "numeric" });
+    }
+
+    function timeFromTimestamp(timestamp) {
+      const date = timestamp.toDate();
+      return { hours: date.getHours(), minutes: date.getMinutes() };
+    }
+
+    function formatTime(timestamp) {
+      const time = timeFromTimestamp(timestamp);
+      return `${String(time.hours).padStart(2, "0")}:${String(time.minutes).padStart(2, "0")}`;
+    }
+
+    function timestampForDate(baseTimestamp, key) {
+      const [year, month, day] = key.split("-").map(Number);
+      const time = timeFromTimestamp(baseTimestamp);
+      return Timestamp.fromDate(new Date(year, month - 1, day, time.hours, time.minutes, 0, 0));
+    }
+
+    function updateSelectedDates() {
+      selectedDates.sort();
+      selectedDatesDiv.textContent = selectedDates.length
+        ? `Fechas seleccionadas: ${selectedDates.map(key => formatDate(new Date(`${key}T12:00:00`))).join(" · ")}`
+        : "Selecciona uno o varios días del calendario.";
+      addShiftBtn.disabled = selectedDates.length === 0 || shiftSelect.value === "";
+    }
+
+    function toggleDay(dayElement, date) {
+      if (shiftsByDate.has(dateKey(date))) {
+        formStatus.textContent = "Ese día ya tiene un turno asignado.";
+        formStatus.className = "status error";
+        return;
+      }
+
+      const key = dateKey(date);
+      if (selectedDates.includes(key)) {
+        selectedDates = selectedDates.filter(item => item !== key);
+        dayElement.classList.remove("selected");
+        dayElement.setAttribute("aria-pressed", "false");
+      } else {
+        selectedDates.push(key);
+        dayElement.classList.add("selected");
+        dayElement.setAttribute("aria-pressed", "true");
+      }
+      formStatus.textContent = "";
+      formStatus.className = "status";
+      updateSelectedDates();
+    }
+
+    async function loadSchedules() {
+      try {
+        const snapshot = await getDocs(collection(db, "Horarios"));
+        shiftSelect.innerHTML = '<option value="">Selecciona un turno</option>';
+
+        snapshot.forEach(documentSnapshot => {
+          const schedule = documentSnapshot.data();
+          if (!schedule.HoraInicio || !schedule.HoraFin) return;
+
+          const option = document.createElement("option");
+          option.value = documentSnapshot.id;
+          option.textContent = `${formatTime(schedule.HoraInicio)} - ${formatTime(schedule.HoraFin)}`;
+          option.dataset.start = schedule.HoraInicio.toMillis();
+          option.dataset.end = schedule.HoraFin.toMillis();
+          shiftSelect.appendChild(option);
+        });
+
+        shiftSelect.disabled = snapshot.empty;
+      } catch (error) {
+        console.error("Error al cargar Horarios:", error);
+        formStatus.textContent = "No se pudieron cargar los horarios.";
+        formStatus.className = "status error";
+      }
+    }
+
+    async function loadMonthShifts() {
+      if (!currentEmployeeId) return;
+
+      shiftsByDate = new Map();
+
+      const year = currentDate.getFullYear();
+      const month = currentDate.getMonth();
+      const start = Timestamp.fromDate(new Date(year, month, 1, 0, 0, 0, 0));
+      const end = Timestamp.fromDate(new Date(year, month + 1, 1, 0, 0, 0, 0));
+
+      try {
+        const q = query(
+          collection(db, "Turnos"),
+          where("EmpleadoId", "==", currentEmployeeId),
+          where("Fecha", ">=", start),
+          where("Fecha", "<", end)
+        );
+        const snapshot = await getDocs(q);
+
+        snapshot.forEach(documentSnapshot => {
+          const shift = documentSnapshot.data();
+          const date = shift.Fecha.toDate();
+          shiftsByDate.set(dateKey(date), {
+            start: shift.HoraInicio,
+            end: shift.HoraFin
+          });
+        });
+
+        renderCalendar();
+      } catch (error) {
+        console.error("Error al cargar los turnos:", error);
+        formStatus.textContent = "No se pudieron cargar los turnos del mes.";
+        formStatus.className = "status error";
+        renderCalendar();
+      }
+    }
 
     function renderCalendar() {
       const year = currentDate.getFullYear();
       const month = currentDate.getMonth();
       const textoFecha = currentDate.toLocaleDateString("es-ES", { month: "long", year: "numeric" });
       monthYearTitle.textContent = textoFecha.replace(" de ", " ");
-
       calendarDays.innerHTML = "";
 
       const firstDayIndex = (new Date(year, month, 1).getDay() + 6) % 7;
       const totalDays = new Date(year, month + 1, 0).getDate();
 
       for (let i = 0; i < firstDayIndex; i++) {
-        calendarDays.appendChild(Object.assign(document.createElement("div"), { className: "day empty", "aria-hidden": "true" }));
+        const empty = document.createElement("div");
+        empty.className = "day empty";
+        empty.setAttribute("aria-hidden", "true");
+        calendarDays.appendChild(empty);
       }
 
       for (let day = 1; day <= totalDays; day++) {
-        const dayElement = document.createElement("div");
+        const date = new Date(year, month, day, 12, 0, 0, 0);
+        const key = dateKey(date);
+        const shift = shiftsByDate.get(key);
+        const dayElement = document.createElement("button");
+        dayElement.type = "button";
         dayElement.className = "day";
-        dayElement.textContent = day;
-        dayElement.setAttribute("aria-label", `${day} de ${textoFecha}`);
+
+        const number = document.createElement("span");
+        number.textContent = day;
+        dayElement.appendChild(number);
+
+        if (shift) {
+          dayElement.classList.add("has-shift");
+          const label = document.createElement("span");
+          label.className = "shift-label";
+          label.textContent = `${formatTime(shift.start)}-${formatTime(shift.end)}`;
+          dayElement.appendChild(label);
+        } else if (selectedDates.includes(key)) {
+          dayElement.classList.add("selected");
+        }
+
+        dayElement.setAttribute("aria-label", `Seleccionar ${formatDate(date)}`);
+        dayElement.setAttribute("aria-pressed", selectedDates.includes(key) ? "true" : "false");
+        dayElement.addEventListener("click", () => toggleDay(dayElement, date));
         calendarDays.appendChild(dayElement);
       }
+
+      updateSelectedDates();
     }
 
-    document.getElementById("prevMonth").addEventListener("click", () => {
-      currentDate.setMonth(currentDate.getMonth() - 1);
-      renderCalendar();
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "index.html";
+        return;
+      }
+
+      const userNameDiv = document.getElementById("userName");
+      const centerDiv = document.getElementById("nameCenter");
+
+      try {
+        const q = query(collection(db, "Empleados"), where("Correo", "==", user.email));
+        const querySnapshot = await getDocs(q);
+
+        if (!querySnapshot.empty) {
+          const employeeDocument = querySnapshot.docs[0];
+          const employee = employeeDocument.data();
+          currentEmployeeId = employeeDocument.id;
+          userNameDiv.textContent = `${employee.Nombre} ${employee.Apellidos}`;
+          centerDiv.textContent = `${employee.Centro} ${employee.Provincia}`;
+        } else {
+          userNameDiv.textContent = user.email;
+        }
+      } catch (error) {
+        console.error("Error al obtener los datos del empleado:", error);
+        userNameDiv.textContent = user.email;
+      }
+
+      await loadSchedules();
+      await loadMonthShifts();
     });
 
-    document.getElementById("nextMonth").addEventListener("click", () => {
+    document.getElementById("logoutBtn").addEventListener("click", () => signOut(auth));
+
+    document.getElementById("prevMonth").addEventListener("click", async () => {
+      currentDate.setMonth(currentDate.getMonth() - 1);
+      selectedDates = [];
+      await loadMonthShifts();
+    });
+
+    document.getElementById("nextMonth").addEventListener("click", async () => {
       currentDate.setMonth(currentDate.getMonth() + 1);
-      renderCalendar();
+      selectedDates = [];
+      await loadMonthShifts();
+    });
+
+    shiftSelect.addEventListener("change", () => {
+      formStatus.textContent = "";
+      formStatus.className = "status";
+      updateSelectedDates();
+    });
+
+    addShiftBtn.addEventListener("click", async () => {
+      const scheduleId = shiftSelect.value;
+      if (!currentEmployeeId) {
+        formStatus.textContent = "No se pudo identificar al empleado.";
+        formStatus.className = "status error";
+        return;
+      }
+      if (!scheduleId || selectedDates.length === 0) {
+        formStatus.textContent = "Selecciona al menos una fecha y un turno.";
+        formStatus.className = "status error";
+        return;
+      }
+
+      const selectedOption = shiftSelect.selectedOptions[0];
+      const startTimestamp = Timestamp.fromMillis(Number(selectedOption.dataset.start));
+      const endTimestamp = Timestamp.fromMillis(Number(selectedOption.dataset.end));
+      addShiftBtn.disabled = true;
+
+      try {
+        await Promise.all(selectedDates.map(async key => {
+          const [year, month, day] = key.split("-").map(Number);
+          return addDoc(collection(db, "Turnos"), {
+            EmpleadoId: currentEmployeeId,
+            Fecha: Timestamp.fromDate(new Date(year, month - 1, day, 12, 0, 0, 0)),
+            HoraInicio: timestampForDate(startTimestamp, key),
+            HoraFin: timestampForDate(endTimestamp, key)
+          });
+        }));
+
+        formStatus.textContent = `Se añadieron ${selectedDates.length} turno${selectedDates.length === 1 ? "" : "s"}.`;
+        formStatus.className = "status success";
+        selectedDates = [];
+        await loadMonthShifts();
+      } catch (error) {
+        console.error("Error al guardar los turnos:", error);
+        formStatus.textContent = "No se pudieron guardar los turnos.";
+        formStatus.className = "status error";
+      } finally {
+        updateSelectedDates();
+      }
     });
 
     renderCalendar();
