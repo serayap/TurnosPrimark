@@ -27,6 +27,7 @@
     <div class="header">
       <h2>Primark</h2>
       <div id="userName" class="user-name">Cargando usuario...</div>
+      <div id="nameCenter" class="user-name">Cargando centro...</div>
       <button class="btn btn-out" id="logoutBtn">Cerrar Sesión</button>
     </div>
 
@@ -69,6 +70,7 @@
         window.location.href = "index.html";
       } else {
         const userNameDiv = document.getElementById("userName");
+        const centerDiv = document.getElementById("nameCenter");
         
         try {
           // Buscamos en la colección "empleados" al usuario con ese correo
@@ -80,6 +82,7 @@
             const datosEmpleado = querySnapshot.docs[0].data();
             console.log(datosEmpleado.Nombre);
             userNameDiv.textContent = `${datosEmpleado.Nombre} ${datosEmpleado.Apellidos}`;
+            centerDiv.textContent = `${datosEmpleado.Centro} ${datosEmpleado.Provincia}`;
           } else {
             // Respaldo en caso de que el correo no exista en la colección "empleados"
             console.log("no existe el nombre en empleados");
