@@ -330,7 +330,7 @@
           return;
         }
         await Promise.all(selectedDates.map(async (key) => {const [year, month, day] = key.split("-").map(Number); return addDoc(collection(db, "Turnos"), {EmpleadoId: currentEmployeeId, Fecha: Timestamp.fromDate(new Date(year, month - 1, day, 12, 0, 0, 0)), HoraInicio: timestampForDate(startTimestamp, key), HoraFin: timestampForDate(endTimestamp, key), Puesto: puesto}); }) );
-        formStatus.textContent = `Se añadieron ${selectedDates.length} turno${selectedDates.length === 1 ? "" : "s"}.`; formStatus.className = "status success"; selectedDates = []; await loadMonthShifts();
+        formStatus.textContent = `Se añadieron ${selectedDates.length} turno${selectedDates.length === 1 ? "" : "s"}.`; formStatus.className = "status success"; selectedDates = []; shiftSelect.value = ""; puestoSelect.value = ""; await loadMonthShifts();
       } catch (error) { console.error("Error al guardar los turnos:", error); formStatus.textContent = "No se pudieron guardar los turnos."; formStatus.className = "status error"; }
       finally { updateSelectedDates(); }
     });
