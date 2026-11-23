@@ -133,7 +133,8 @@
     const addShiftBtn = document.getElementById("addShiftBtn");
     const formStatus = document.getElementById("formStatus");
     const puestoSelect = document.getElementById("puestoSelect");
-    const deleteShiftBtn = document.getElementById("deleteShiftBtn");
+    const deleteShiftBtn = document.getElementById("deleteShiftBtn");    
+    const deleteShiftRow = document.getElementById("deleteShiftRow");
         
     let currentDate = new Date();
     let currentEmployeeId = null;
@@ -265,12 +266,21 @@
     });
 
     dayElement.addEventListener("click", () => {
-      formStatus.textContent =
-        `Turno asignado: ${formatTime(shift.start)}-${formatTime(shift.end)} · ${shift.puesto || "Sin puesto"}`;
-      formStatus.className = "status";
-      deleteShiftId = shift.id;
-      deleteShiftDate = key;
-      deleteShiftBtn.hidden = false;
+      if (shift) {
+        formStatus.textContent =
+          `Turno asignado: ${formatTime(shift.start)}-${formatTime(shift.end)} · ${shift.puesto || "Sin puesto"}`;
+        formStatus.className = "status";
+    
+        deleteShiftId = shift.id;
+        deleteShiftDate = key;
+        deleteShiftRow.hidden = false;
+        return;
+      }
+    
+      deleteShiftId = null;
+      deleteShiftDate = null;
+      deleteShiftRow.hidden = true;
+      toggleDay(dayElement, date);
     });
     
     puestoSelect.addEventListener("change", () => {
