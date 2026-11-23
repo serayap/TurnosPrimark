@@ -134,15 +134,7 @@
     const formStatus = document.getElementById("formStatus");
     const puestoSelect = document.getElementById("puestoSelect");
     const deleteShiftBtn = document.getElementById("deleteShiftBtn");
-    const occupiedDates = selectedDates.filter(key => shiftsByDate.has(key));
-
-    if (occupiedDates.length > 0) {
-      formStatus.textContent =
-        "Hay turnos asignados en los días seleccionados. Elimínalos primero.";
-      formStatus.className = "status error";
-      return;
-    }
-    
+        
     let currentDate = new Date();
     let currentEmployeeId = null;
     let selectedDates = [];
