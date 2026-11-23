@@ -208,25 +208,93 @@
     }
 
     function renderCalendar() {
-      const year = currentDate.getFullYear(); const month = currentDate.getMonth();
-      const textoFecha = currentDate.toLocaleDateString("es-ES", { month: "long", year: "numeric" });
-      monthYearTitle.textContent = textoFecha.replace(" de ", " "); calendarDays.innerHTML = "";
+      const year = currentDate.getFullYear();
+      const month = currentDate.getMonth();
+      const textoFecha = currentDate.toLocaleDateString("es-ES", {
+        month: "long",
+        year: "numeric"
+      });
+    
+      monthYearTitle.textContent = textoFecha.replace(" de ", " ");
+      calendarDays.innerHTML = "";
+    
       const firstDayIndex = (new Date(year, month, 1).getDay() + 6) % 7;
       const totalDays = new Date(year, month + 1, 0).getDate();
-      for (let i = 0; i < firstDayIndex; i++) { const empty = document.createElement("div"); empty.className = "day empty"; empty.setAttribute("aria-hidden", "true"); calendarDays.appendChild(empty); }
-      for (let day = 1; day <= totalDays; day++) {
-        const date = new Date(year, month, day, 12, 0, 0, 0); const key = dateKey(date); const shift = shiftsByDate.get(key);
-        const dayElement = document.createElement("button"); dayElement.type = "button"; dayElement.className = "day";
-        const number = document.createElement("span"); number.textContent = day; dayElement.appendChild(number);
-        if (shift) { dayElement.classList.add("has-shift"); const clasePorPuesto = {"Duty mañana": "puesto-duty-manana", "Duty tarde": "puesto-duty-tarde", "Apertura": "puesto-apertura", "Top point": "puesto-top-point"}; const clasePuesto = clasePorPuesto[shift.puesto]; if (clasePuesto) dayElement.classList.add(clasePuesto); const label = document.createElement("span"); label.className = "shift-label"; label.textContent = `${formatTime(shift.start)}-${formatTime(shift.end)}`; dayElement.appendChild(label); }
-        else if (selectedDates.includes(key)) dayElement.classList.add("selected");
-        dayElement.setAttribute("aria-label", `Seleccionar ${formatDate(date)}`); dayElement.setAttribute("aria-pressed", selectedDates.includes(key) ? "true" : "false"); dayElement.addEventListener("click", () => toggleDay(dayElement, date)); calendarDays.appendChild(dayElement);
-        dayElement.addEventListener("click", () => {
-        if (shift) { formStatus.textContent = `Turno asignado: ${formatTime(shift.start)}-${formatTime(shift.end)} · ${shift.puesto || "Sin puesto"}`; formStatus.className = "status"; deleteShiftId = shift.id; deleteShiftDate = key; deleteShiftRow.hidden = false; return; } deleteShiftId = null; deleteShiftDate = null; deleteShiftRow.hidden = true; toggleDay(dayElement, date); });
+    
+      for (let i = 0; i < firstDayIndex; i++) {
+        const empty = document.createElement("div");
+        empty.className = "day empty";
+        empty.setAttribute("aria-hidden", "true");
+        calendarDays.appendChild(empty);
       }
+    
+      for (let day = 1; day <= totalDays; day++) {
+        const date = new Date(year, month, day, 12, 0, 0, 0);
+        const key = dateKey(date);
+        const shift = shiftsByDate.get(key);
+    
+        const dayElement = document.createElement("button");
+        dayElement.type = "button";
+        dayElement.className = "day";
+    
+        const number = document.createElement("span");
+        number.textContent = day;
+        dayElement.appendChild(number);
+    
+        if (shift) {
+          dayElement.classList.add("has-shift");
+    
+          const clasePorPuesto = {
+            "Duty mañana": "puesto-duty-manana",
+            "Duty tarde": "puesto-duty-tarde",
+            "Apertura": "puesto-apertura",
+            "Top point": "puesto-top-point"
+          };
+    
+          const clasePuesto = clasePorPuesto[shift.puesto];
+          if (clasePuesto) {
+            dayElement.classList.add(clasePuesto);
+          }
+    
+          const label = document.createElement("span");
+          label.className = "shift-label";
+          label.textContent =
+            `${formatTime(shift.start)}-${formatTime(shift.end)}`;
+          dayElement.appendChild(label);
+        } else if (selectedDates.includes(key)) {
+          dayElement.classList.add("selected");
+        }
+    
+        dayElement.setAttribute(
+          "aria-label",
+          `Seleccionar ${formatDate(date)}`
+        );
+        dayElement.setAttribute(
+          "aria-pressed",
+          selectedDates.includes(key) ? "true" : "false"
+        );
+    
+        dayElement.addEventListener("click", () => {
+          if (shift) {
+            formStatus.textContent =
+              `Turno asignado: ${formatTime(shift.start)}-${formatTime(shift.end)} · ${shift.puesto || "Sin puesto"}`;
+            formStatus.className = "status";
+    
+            deleteShiftId = shift.id;
+            deleteShiftDate = key;
+            deleteShiftRow.hidden = false;
+            return;
+          }    
+          deleteShiftId = null;
+          deleteShiftDate = null;
+          deleteShiftRow.hidden = true;
+          toggleDay(dayElement, date);
+        });    
+        calendarDays.appendChild(dayElement);
+      }    
       updateSelectedDates();
     }
-
+    
     onAuthStateChanged(auth, async (user) => {
       if (!user) { window.location.href = "index.html"; return; }
       const userNameDiv = document.getElementById("userName"); const centerDiv = document.getElementById("nameCenter");
