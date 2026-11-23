@@ -353,8 +353,7 @@
         await deleteDoc(doc(db, "Turnos", deleteShiftId));
     
         deleteShiftId = null;
-        deleteShiftDate = null;
-        deleteShiftBtn.hidden = true;
+        deleteShiftRow.hidden = true;
     
         formStatus.textContent = "Turno eliminado correctamente.";
         formStatus.className = "status success";
@@ -368,7 +367,6 @@
         deleteShiftBtn.disabled = false;
       }
     });
-
     renderCalendar();
   </script>
 </body>
