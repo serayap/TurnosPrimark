@@ -34,6 +34,11 @@
     .status { min-height: 20px; margin-top: 10px; font-size: 13px; }
     .status.success { color: #137A42; }
     .status.error { color: #C0392B; }
+    .day.has-shift.puesto-duty-manana { background: #DDF2D8; }
+    .day.has-shift.puesto-duty-tarde { background: #FFE3C2; }
+    .day.has-shift.puesto-apertura { background: #CDEFFD; }
+    .day.has-shift.puesto-top-point { background: #F8D7E8; }
+
     @media (max-width: 600px) {
       .header { padding-top: 48px; }
       .btn-out { left: 50%; right: auto; width: fit-content; transform: translateX(-50%); }
@@ -155,7 +160,7 @@
             ...documentSnapshot.data()
           }))
         );*/
-        snapshot.forEach(documentSnapshot => { const shift = documentSnapshot.data(); const date = shift.Fecha.toDate(); shiftsByDate.set(dateKey(date), { start: shift.HoraInicio, end: shift.HoraFin }); });
+        snapshot.forEach(documentSnapshot => { const shift = documentSnapshot.data(); const date = shift.Fecha.toDate(); shiftsByDate.set(dateKey(date), { start: shift.HoraInicio, end: shift.HoraFin, puesto: shift.Puesto }); });
         renderCalendar();
       } catch (error) { console.error("Error al cargar los turnos:", error); formStatus.textContent = "No se pudieron cargar los turnos del mes."; formStatus.className = "status error"; renderCalendar(); }
     }
@@ -171,7 +176,7 @@
         const date = new Date(year, month, day, 12, 0, 0, 0); const key = dateKey(date); const shift = shiftsByDate.get(key);
         const dayElement = document.createElement("button"); dayElement.type = "button"; dayElement.className = "day";
         const number = document.createElement("span"); number.textContent = day; dayElement.appendChild(number);
-        if (shift) { dayElement.classList.add("has-shift"); const label = document.createElement("span"); label.className = "shift-label"; label.textContent = `${formatTime(shift.start)}-${formatTime(shift.end)}`; dayElement.appendChild(label); }
+        if (shift) { dayElement.classList.add("has-shift"); const clasePorPuesto = {"Duty mañana": "puesto-duty-manana", "Duty tarde": "puesto-duty-tarde", "Apertura": "puesto-apertura", "Top point": "puesto-top-point"}; const clasePuesto = clasePorPuesto[shift.puesto]; if (clasePuesto) dayElement.classList.add(clasePuesto); const label = document.createElement("span"); label.className = "shift-label"; label.textContent = `${formatTime(shift.start)}-${formatTime(shift.end)}`; dayElement.appendChild(label); }
         else if (selectedDates.includes(key)) dayElement.classList.add("selected");
         dayElement.setAttribute("aria-label", `Seleccionar ${formatDate(date)}`); dayElement.setAttribute("aria-pressed", selectedDates.includes(key) ? "true" : "false"); dayElement.addEventListener("click", () => toggleDay(dayElement, date)); calendarDays.appendChild(dayElement);
       }
