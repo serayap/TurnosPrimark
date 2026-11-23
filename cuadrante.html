@@ -34,6 +34,26 @@
     .status { min-height: 20px; margin-top: 10px; font-size: 13px; }
     .status.success { color: #137A42; }
     .status.error { color: #C0392B; }
+    .legend {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px 18px;
+        margin-top: 16px;
+        color: var(--p-dark);
+        font-size: 13px;
+    }      
+      .legend-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+    }      
+      .legend-color {
+        width: 16px;
+        height: 16px;
+        border: 1px solid rgba(30, 34, 41, 0.15);
+        border-radius: 4px;
+    }
     .day.has-shift.puesto-duty-manana { background: #DDF2D8; }
     .day.has-shift.puesto-duty-tarde { background: #FFE3C2; }
     .day.has-shift.puesto-apertura { background: #CDEFFD; }
@@ -69,6 +89,12 @@
       <div class="day-name">Lun</div><div class="day-name">Mar</div><div class="day-name">Mié</div><div class="day-name">Jue</div><div class="day-name">Vie</div><div class="day-name">Sáb</div><div class="day-name">Dom</div>
     </div>
     <div class="grid" id="calendarDays"></div>
+    <div class="legend" aria-label="Leyenda de puestos">
+      <span class="legend-item"><span class="legend-color legend-duty-manana" aria-hidden="true"></span>Duty mañana</span>
+      <span class="legend-item"><span class="legend-color legend-duty-tarde" aria-hidden="true"></span>Duty tarde</span>
+      <span class="legend-item"><span class="legend-color legend-apertura" aria-hidden="true"></span>Apertura</span>
+      <span class="legend-item"><span class="legend-color legend-top-point" aria-hidden="true"></span>Top point</span>
+    </div>
     <section class="shift-form" aria-label="Añadir turno">
       <div id="selectedDates" class="selected-dates">Selecciona uno o varios días del calendario.</div>
       <div class="form-row">
