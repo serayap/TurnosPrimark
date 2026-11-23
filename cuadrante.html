@@ -162,7 +162,7 @@
           const schedule = documentSnapshot.data();
           if (!schedule.HoraInicio || !schedule.HoraFin) return;
           const option = document.createElement("option"); option.value = documentSnapshot.id; option.textContent = `${formatTime(schedule.HoraInicio)} - ${formatTime(schedule.HoraFin)}`;
-          option.dataset.start = schedule.HoraInicio.toMillis(); option.dataset.end = schedule.HoraFin.toMillis(); shiftSelect.appendChild(option);
+          option.dataset.start = schedule.HoraInicio.toMillis(); option.dataset.end = schedule.HoraFin.toMillis(); option.dataset.puesto = schedule.Puesto || ""; shiftSelect.appendChild(option);
         });
         shiftSelect.disabled = snapshot.empty;
       } catch (error) { console.error("Error al cargar Horarios:", error); formStatus.textContent = "No se pudieron cargar los horarios."; formStatus.className = "status error"; }
@@ -242,7 +242,8 @@
       const startTimestamp = Timestamp.fromMillis(Number(selectedOption.dataset.start));
       const endTimestamp = Timestamp.fromMillis(Number(selectedOption.dataset.end)); addShiftBtn.disabled = true;
       try {
-        await Promise.all(selectedDates.map(async key => { const [year, month, day] = key.split("-").map(Number); return addDoc(collection(db, "Turnos"), { EmpleadoId: currentEmployeeId, Fecha: Timestamp.fromDate(new Date(year, month - 1, day, 12, 0, 0, 0)), HoraInicio: timestampForDate(startTimestamp, key), HoraFin: timestampForDate(endTimestamp, key) }); }));
+        const puesto = selectedOption.dataset.puesto;
+        await Promise.all(selectedDates.map(async key => { const [year, month, day] = key.split("-").map(Number); return addDoc(collection(db, "Turnos"), { EmpleadoId: currentEmployeeId, Fecha: Timestamp.fromDate(new Date(year, month - 1, day, 12, 0, 0, 0)), HoraInicio: timestampForDate(startTimestamp, key), HoraFin: timestampForDate(endTimestamp, key) }), Puesto: puesto; }));
         formStatus.textContent = `Se añadieron ${selectedDates.length} turno${selectedDates.length === 1 ? "" : "s"}.`; formStatus.className = "status success"; selectedDates = []; await loadMonthShifts();
       } catch (error) { console.error("Error al guardar los turnos:", error); formStatus.textContent = "No se pudieron guardar los turnos."; formStatus.className = "status error"; }
       finally { updateSelectedDates(); }
