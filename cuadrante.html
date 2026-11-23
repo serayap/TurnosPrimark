@@ -221,6 +221,8 @@
         if (shift) { dayElement.classList.add("has-shift"); const clasePorPuesto = {"Duty mañana": "puesto-duty-manana", "Duty tarde": "puesto-duty-tarde", "Apertura": "puesto-apertura", "Top point": "puesto-top-point"}; const clasePuesto = clasePorPuesto[shift.puesto]; if (clasePuesto) dayElement.classList.add(clasePuesto); const label = document.createElement("span"); label.className = "shift-label"; label.textContent = `${formatTime(shift.start)}-${formatTime(shift.end)}`; dayElement.appendChild(label); }
         else if (selectedDates.includes(key)) dayElement.classList.add("selected");
         dayElement.setAttribute("aria-label", `Seleccionar ${formatDate(date)}`); dayElement.setAttribute("aria-pressed", selectedDates.includes(key) ? "true" : "false"); dayElement.addEventListener("click", () => toggleDay(dayElement, date)); calendarDays.appendChild(dayElement);
+        dayElement.addEventListener("click", () => {
+        if (shift) { formStatus.textContent = `Turno asignado: ${formatTime(shift.start)}-${formatTime(shift.end)} · ${shift.puesto || "Sin puesto"}`; formStatus.className = "status"; deleteShiftId = shift.id; deleteShiftDate = key; deleteShiftRow.hidden = false; return; } deleteShiftId = null; deleteShiftDate = null; deleteShiftRow.hidden = true; toggleDay(dayElement, date); });
       }
       updateSelectedDates();
     }
@@ -264,25 +266,7 @@
       } catch (error) { console.error("Error al guardar los turnos:", error); formStatus.textContent = "No se pudieron guardar los turnos."; formStatus.className = "status error"; }
       finally { updateSelectedDates(); }
     });
-
-    dayElement.addEventListener("click", () => {
-      if (shift) {
-        formStatus.textContent =
-          `Turno asignado: ${formatTime(shift.start)}-${formatTime(shift.end)} · ${shift.puesto || "Sin puesto"}`;
-        formStatus.className = "status";
-    
-        deleteShiftId = shift.id;
-        deleteShiftDate = key;
-        deleteShiftRow.hidden = false;
-        return;
-      }
-    
-      deleteShiftId = null;
-      deleteShiftDate = null;
-      deleteShiftRow.hidden = true;
-      toggleDay(dayElement, date);
-    });
-    
+        
     puestoSelect.addEventListener("change", () => {
       formStatus.textContent = "";
       formStatus.className = "status";
