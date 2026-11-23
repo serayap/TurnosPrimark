@@ -100,6 +100,11 @@
       <span class="legend-item"><span class="legend-color legend-apertura" aria-hidden="true"></span>Apertura</span>
       <span class="legend-item"><span class="legend-color legend-top-point" aria-hidden="true"></span>Top point</span>
     </div>
+    <div id="deleteShiftRow" hidden>
+      <button class="btn btn-out" id="deleteShiftBtn" type="button">
+        Eliminar turno
+      </button>
+    </div>
     <section class="shift-form" aria-label="Añadir turno">
       <div id="selectedDates" class="selected-dates">Selecciona uno o varios días del calendario.</div>
       <div class="form-row">
@@ -114,7 +119,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-    import { getFirestore, collection, query, where, orderBy, getDocs, addDoc, Timestamp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+    import { getFirestore, collection, query, where, orderBy, getDocs, addDoc, deleteDoc, doc, Timestamp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
     const firebaseConfig = { apiKey: "AIzaSyC-ZXBeOtmK4L31KW2xI1Biv_r2jnyLKT0", authDomain: "turnosprimark.firebaseapp.com", projectId: "turnosprimark", storageBucket: "turnosprimark.firebasestorage.app", messagingSenderId: "162804882971", appId: "1:162804882971:web:ee5b525065bddfd843e2be", measurementId: "G-Q0H4W1RJBJ" };
 
@@ -128,11 +133,22 @@
     const addShiftBtn = document.getElementById("addShiftBtn");
     const formStatus = document.getElementById("formStatus");
     const puestoSelect = document.getElementById("puestoSelect");
+    const deleteShiftBtn = document.getElementById("deleteShiftBtn");
+    const occupiedDates = selectedDates.filter(key => shiftsByDate.has(key));
 
+    if (occupiedDates.length > 0) {
+      formStatus.textContent =
+        "Hay turnos asignados en los días seleccionados. Elimínalos primero.";
+      formStatus.className = "status error";
+      return;
+    }
+    
     let currentDate = new Date();
     let currentEmployeeId = null;
     let selectedDates = [];
     let shiftsByDate = new Map();
+    let deleteShiftId = null;
+    let deleteShiftDate = null;
 
     function dateKey(date) { const year = date.getFullYear(); const month = String(date.getMonth() + 1).padStart(2, "0"); const day = String(date.getDate()).padStart(2, "0"); return `${year}-${month}-${day}`; }
     function formatDate(date) { return date.toLocaleDateString("es-ES", { weekday: "short", day: "2-digit", month: "2-digit", year: "numeric" }); }
@@ -193,7 +209,7 @@
             ...documentSnapshot.data()
           }))
         );*/
-        snapshot.forEach(documentSnapshot => { const shift = documentSnapshot.data(); const date = shift.Fecha.toDate(); shiftsByDate.set(dateKey(date), { start: shift.HoraInicio, end: shift.HoraFin, puesto: shift.Puesto }); });
+        snapshot.forEach(documentSnapshot => { const shift = documentSnapshot.data(); const date = shift.Fecha.toDate(); shiftsByDate.set(dateKey(date), { id: documentSnapshot.id, start: shift.HoraInicio, end: shift.HoraFin, puesto: shift.Puesto }); });
         renderCalendar();
       } catch (error) { console.error("Error al cargar los turnos:", error); formStatus.textContent = "No se pudieron cargar los turnos del mes."; formStatus.className = "status error"; renderCalendar(); }
     }
@@ -256,10 +272,44 @@
       finally { updateSelectedDates(); }
     });
 
+    dayElement.addEventListener("click", () => {
+      formStatus.textContent =
+        `Turno asignado: ${formatTime(shift.start)}-${formatTime(shift.end)} · ${shift.puesto || "Sin puesto"}`;
+      formStatus.className = "status";
+      deleteShiftId = shift.id;
+      deleteShiftDate = key;
+      deleteShiftBtn.hidden = false;
+    });
+    
     puestoSelect.addEventListener("change", () => {
       formStatus.textContent = "";
       formStatus.className = "status";
       updateSelectedDates();
+    });
+
+    deleteShiftBtn.addEventListener("click", async () => {
+      if (!deleteShiftId) return;
+    
+      deleteShiftBtn.disabled = true;
+    
+      try {
+        await deleteDoc(doc(db, "Turnos", deleteShiftId));
+    
+        deleteShiftId = null;
+        deleteShiftDate = null;
+        deleteShiftBtn.hidden = true;
+    
+        formStatus.textContent = "Turno eliminado correctamente.";
+        formStatus.className = "status success";
+    
+        await loadMonthShifts();
+      } catch (error) {
+        console.error("Error al eliminar el turno:", error);
+        formStatus.textContent = "No se pudo eliminar el turno.";
+        formStatus.className = "status error";
+      } finally {
+        deleteShiftBtn.disabled = false;
+      }
     });
 
     renderCalendar();
