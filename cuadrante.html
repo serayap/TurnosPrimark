@@ -112,7 +112,7 @@
       <div id="selectedDates" class="selected-dates">Selecciona uno o varios días del calendario.</div>
       <div class="form-row">
         <div class="field"><label for="shiftSelect">Turno</label><select id="shiftSelect" disabled><option value="">Cargando horarios...</option></select></div>
-        <div class="field"><label for="puestoSelect">Puesto</label><select id="puestoSelect"><option value="">Selecciona un puesto</option><option value="Duty mañana">Duty mañana</option><option value="Duty tarde">Duty tarde</option><option value="Apertura">Apertura</option><option value="Top point">Top point</option></select></div>
+        <div class="field"><label for="puestoSelect">Puesto</label><select id="puestoSelect"><option value="">Selecciona un puesto</option><option value="">Sin puesto asignado</option><option value="Duty mañana">Duty mañana</option><option value="Duty tarde">Duty tarde</option><option value="Apertura">Apertura</option><option value="Top point">Top point</option></select></div>
         <button class="btn" id="addShiftBtn" disabled>Añadir</button>
       </div>
       <div id="formStatus" class="status" role="status"></div>
@@ -204,7 +204,9 @@
             ...documentSnapshot.data()
           }))
         );*/
-        snapshot.forEach(documentSnapshot => { const shift = documentSnapshot.data(); const date = shift.Fecha.toDate(); shiftsByDate.set(dateKey(date), { id: documentSnapshot.id, start: shift.HoraInicio, end: shift.HoraFin, puesto: shift.Puesto }); });
+        //snapshot.forEach(documentSnapshot => { const shift = documentSnapshot.data(); const date = shift.Fecha.toDate(); shiftsByDate.set(dateKey(date), { id: documentSnapshot.id, start: shift.HoraInicio, end: shift.HoraFin, puesto: shift.Puesto }); });
+        snapshot.forEach((documentSnapshot) => { const shift = documentSnapshot.data(); const date = shift.Fecha.toDate(); shiftsByDate.set(dateKey(date), { id: documentSnapshot.id, start: shift.HoraInicio, end: shift.HoraFin, puesto: shift.Puesto || null });
+});
         renderCalendar();
       } catch (error) { console.error("Error al cargar los turnos:", error); formStatus.textContent = "No se pudieron cargar los turnos del mes."; formStatus.className = "status error"; renderCalendar(); }
     }
@@ -253,11 +255,9 @@
             "Top point": "puesto-top-point"
           };
     
-          const clasePuesto = clasePorPuesto[shift.puesto];
-          if (clasePuesto) {
-            dayElement.classList.add(clasePuesto);
-          }
-    
+          /*const clasePuesto = clasePorPuesto[shift.puesto]; if (clasePuesto) { dayElement.classList.add(clasePuesto); }*/
+          const clasePuesto = clasePorPuesto[shift.puesto]; if (clasePuesto) { dayElement.classList.add(clasePuesto); } else { dayElement.classList.add("puesto-sin-puesto"); }
+          
           const label = document.createElement("span");
           label.className = "shift-label";
           label.textContent =
@@ -323,13 +323,18 @@
       const startTimestamp = Timestamp.fromMillis(Number(selectedOption.dataset.start));
       const endTimestamp = Timestamp.fromMillis(Number(selectedOption.dataset.end)); addShiftBtn.disabled = true;
       try {
-        const puesto = puestoSelect.value;
+        const puesto = puestoSelect.value || null;
+        /*const puesto = puestoSelect.value;
         if (!puesto) {
           formStatus.textContent = "Selecciona un puesto.";
           formStatus.className = "status error";
           return;
-        }
-        await Promise.all(selectedDates.map(async (key) => {const [year, month, day] = key.split("-").map(Number); return addDoc(collection(db, "Turnos"), {EmpleadoId: currentEmployeeId, Fecha: Timestamp.fromDate(new Date(year, month - 1, day, 12, 0, 0, 0)), HoraInicio: timestampForDate(startTimestamp, key), HoraFin: timestampForDate(endTimestamp, key), Puesto: puesto}); }) );
+        }*/
+        //await Promise.all(selectedDates.map(async (key) => {const [year, month, day] = key.split("-").map(Number); return addDoc(collection(db, "Turnos"), {EmpleadoId: currentEmployeeId, Fecha: Timestamp.fromDate(new Date(year, month - 1, day, 12, 0, 0, 0)), HoraInicio: timestampForDate(startTimestamp, key), HoraFin: timestampForDate(endTimestamp, key), Puesto: puesto}); }) );
+        const puestoSeleccionado = puestoSelect.value; if (!puestoSeleccionado) { formStatus.textContent = "Selecciona un puesto o 'Sin puesto'."; formStatus.className = "status error"; return;}
+        const puesto = puestoSeleccionado === "sin-puesto" ? null : puestoSeleccionado;
+        await Promise.all( selectedDates.map(async (key) => { const [year, month, day] = key.split("-").map(Number); return addDoc(collection(db, "Turnos"), { EmpleadoId: currentEmployeeId, Fecha: Timestamp.fromDate( new Date(year, month - 1, day, 12, 0, 0, 0) ), HoraInicio: timestampForDate(startTimestamp, key), HoraFin: timestampForDate(endTimestamp, key), Puesto: puesto }); }) );
+          
         formStatus.textContent = `Se añadieron ${selectedDates.length} turno${selectedDates.length === 1 ? "" : "s"}.`; formStatus.className = "status success"; selectedDates = []; shiftSelect.value = ""; puestoSelect.value = ""; await loadMonthShifts();
       } catch (error) { console.error("Error al guardar los turnos:", error); formStatus.textContent = "No se pudieron guardar los turnos."; formStatus.className = "status error"; }
       finally { updateSelectedDates(); }
