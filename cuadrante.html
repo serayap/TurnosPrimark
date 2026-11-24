@@ -106,12 +106,7 @@
       <span class="legend-item"><span class="legend-color"style="background: #FFFFFF; border: 2px solid #BCA48A;" aria-hidden="true"></span>
   Sin puesto
 </span>
-    </div>
-    <div id="deleteShiftRow" hidden>
-      <button class="btn btn-out" id="deleteShiftBtn" type="button">
-        Eliminar turno
-      </button>
-    </div>
+    </div>      
     <section class="shift-form" aria-label="Añadir turno">
       <div id="selectedDates" class="selected-dates">Selecciona uno o varios días del calendario.</div>
       <div class="form-row">
@@ -120,6 +115,18 @@
         <button class="btn" id="addShiftBtn" disabled>Añadir</button>
       </div>
       <div id="formStatus" class="status" role="status"></div>
+      <div id="deleteShiftRow" hidden>
+        <button class="btn btn-out" id="deleteShiftBtn" type="button">Eliminar turno</button>
+      </div>  
+    </section>
+    <section class="vacation-form" aria-label="Registrar vacaciones">
+      <h3>Registrar vacaciones</h3>    
+      <label for="vacationStart">Desde</label>
+      <input id="vacationStart" type="date">    
+      <label for="vacationEnd">Hasta</label>
+      <input id="vacationEnd" type="date">    
+      <button class="btn" id="saveVacationBtn" type="button">Guardar vacaciones</button>    
+      <div id="vacationStatus" class="status" role="status"></div>
     </section>
   </main>
 
