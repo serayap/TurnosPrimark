@@ -112,7 +112,7 @@
       <div id="selectedDates" class="selected-dates">Selecciona uno o varios días del calendario.</div>
       <div class="form-row">
         <div class="field"><label for="shiftSelect">Turno</label><select id="shiftSelect" disabled><option value="">Cargando horarios...</option></select></div>
-        <div class="field"><label for="puestoSelect">Puesto</label><select id="puestoSelect"><option value="">Selecciona un puesto</option><option value="">Sin puesto asignado</option><option value="Duty mañana">Duty mañana</option><option value="Duty tarde">Duty tarde</option><option value="Apertura">Apertura</option><option value="Top point">Top point</option></select></div>
+        <div class="field"><label for="puestoSelect">Puesto</label><select id="puestoSelect"><option value="">Selecciona un puesto</option><option value="sin-puesto">Sin puesto asignado</option><option value="Duty mañana">Duty mañana</option><option value="Duty tarde">Duty tarde</option><option value="Apertura">Apertura</option><option value="Top point">Top point</option></select></div>
         <button class="btn" id="addShiftBtn" disabled>Añadir</button>
       </div>
       <div id="formStatus" class="status" role="status"></div>
@@ -323,13 +323,6 @@
       const startTimestamp = Timestamp.fromMillis(Number(selectedOption.dataset.start));
       const endTimestamp = Timestamp.fromMillis(Number(selectedOption.dataset.end)); addShiftBtn.disabled = true;
       try {
-        const puesto = puestoSelect.value || null;
-        /*const puesto = puestoSelect.value;
-        if (!puesto) {
-          formStatus.textContent = "Selecciona un puesto.";
-          formStatus.className = "status error";
-          return;
-        }*/
         //await Promise.all(selectedDates.map(async (key) => {const [year, month, day] = key.split("-").map(Number); return addDoc(collection(db, "Turnos"), {EmpleadoId: currentEmployeeId, Fecha: Timestamp.fromDate(new Date(year, month - 1, day, 12, 0, 0, 0)), HoraInicio: timestampForDate(startTimestamp, key), HoraFin: timestampForDate(endTimestamp, key), Puesto: puesto}); }) );
         const puestoSeleccionado = puestoSelect.value; if (!puestoSeleccionado) { formStatus.textContent = "Selecciona un puesto o 'Sin puesto'."; formStatus.className = "status error"; return;}
         const puesto = puestoSeleccionado === "sin-puesto" ? null : puestoSeleccionado;
