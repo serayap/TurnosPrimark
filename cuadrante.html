@@ -263,7 +263,6 @@
             ...documentSnapshot.data()
           }))
         );*/
-        //snapshot.forEach(documentSnapshot => { const shift = documentSnapshot.data(); const date = shift.Fecha.toDate(); shiftsByDate.set(dateKey(date), { id: documentSnapshot.id, start: shift.HoraInicio, end: shift.HoraFin, puesto: shift.Puesto }); });
         snapshot.forEach((documentSnapshot) => { const shift = documentSnapshot.data(); const date = shift.Fecha.toDate(); shiftsByDate.set(dateKey(date), { id: documentSnapshot.id, start: shift.HoraInicio, end: shift.HoraFin, puesto: shift.Puesto || null });
 });
         renderCalendar();
@@ -430,10 +429,13 @@
         if (deleteVacationId) {
           await deleteDoc(doc(db, "Vacaciones", deleteVacationId));
           deleteVacationId = null;
-      
+          deleteShiftId = null;
+          deleteShiftRow.hidden = true;
+          deleteShiftBtn.textContent = "Eliminar turno";
+          
           await loadVacations();
           renderCalendar();
-      
+          
           formStatus.textContent = "Bloque de vacaciones eliminado.";
           formStatus.className = "status success";
         } else if (deleteShiftId) {
