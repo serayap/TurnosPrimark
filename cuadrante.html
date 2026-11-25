@@ -129,7 +129,7 @@
       <input id="vacationStart" type="date">    
       <label for="vacationEnd">Hasta</label>
       <input id="vacationEnd" type="date">    
-      <button class="btn" id="saveVacationBtn" type="button">Guardar vacaciones</button>    
+      <button class="btn" id="saveVacationBtn" type="button" disabled>Guardar vacaciones</button>    
       <div id="vacationStatus" class="status" role="status"></div>
     </section>
   </main>
@@ -156,6 +156,7 @@
     const vacationStart = document.getElementById("vacationStart");
     const vacationEnd = document.getElementById("vacationEnd");
     const saveVacationBtn = document.getElementById("saveVacationBtn");
+    const vacationStatus = document.getElementById("vacationStatus");
         
     let currentDate = new Date();
     let currentEmployeeId = null;
@@ -390,6 +391,44 @@
   
     vacationStart.addEventListener("change", updateVacationButton);
     vacationEnd.addEventListener("change", updateVacationButton);
+
+    onst fechaFin = vacationEnd.value;
+
+  if (!currentEmployeeId) {
+    vacationStatus.textContent = "No se pudo identificar al empleado.";
+    vacationStatus.className = "status error";
+    return;
+  }
+
+  if (!fechaInicio || !fechaFin || fechaFin < fechaInicio) {
+    updateVacationButton();
+    vacationStatus.textContent = "Introduce un rango de fechas válido.";
+    vacationStatus.className = "status error";
+    return;
+  }
+
+  saveVacationBtn.disabled = true;
+
+  try {
+    await addDoc(collection(db, "Vacaciones"), {
+      EmpleadoId: currentEmployeeId,
+      FechaInicio: fechaInicio,
+      FechaFin: fechaFin
+    });
+
+    vacationStart.value = "";
+    vacationEnd.value = "";
+
+    vacationStatus.textContent = "Vacaciones guardadas correctamente.";
+    vacationStatus.className = "status success";
+  } catch (error) {
+    console.error("Error al guardar las vacaciones:", error);
+    vacationStatus.textContent = "No se pudieron guardar las vacaciones.";
+    vacationStatus.className = "status error";
+  } finally {
+    updateVacationButton();
+  }
+});
     
     renderCalendar();
   </script>
