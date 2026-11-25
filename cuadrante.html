@@ -157,6 +157,7 @@
     const vacationEnd = document.getElementById("vacationEnd");
     const saveVacationBtn = document.getElementById("saveVacationBtn");
     const vacationStatus = document.getElementById("vacationStatus");
+    const fechaFin = vacationEnd.value;
         
     let currentDate = new Date();
     let currentEmployeeId = null;
@@ -390,9 +391,7 @@
     });
   
     vacationStart.addEventListener("change", updateVacationButton);
-    vacationEnd.addEventListener("change", updateVacationButton);
-
-    onst fechaFin = vacationEnd.value;
+    vacationEnd.addEventListener("change", updateVacationButton);   
 
   if (!currentEmployeeId) {
     vacationStatus.textContent = "No se pudo identificar al empleado.";
