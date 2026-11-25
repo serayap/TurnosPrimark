@@ -395,7 +395,7 @@
     saveVacationBtn.addEventListener("click", async () => {
       const fechaInicio = vacationStart.value;
       const fechaFin = vacationEnd.value;
-
+    
       if (!currentEmployeeId) {
         vacationStatus.textContent = "No se pudo identificar al empleado.";
         vacationStatus.className = "status error";
@@ -408,7 +408,7 @@
         vacationStatus.className = "status error";
         return;
       }
-
+    
       saveVacationBtn.disabled = true;
     
       try {
@@ -420,7 +420,6 @@
     
         vacationStart.value = "";
         vacationEnd.value = "";
-    
         vacationStatus.textContent = "Vacaciones guardadas correctamente.";
         vacationStatus.className = "status success";
       } catch (error) {
