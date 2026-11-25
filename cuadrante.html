@@ -171,6 +171,7 @@
     let shiftsByDate = new Map();
     let vacationsByDate = new Map();
     let deleteShiftId = null;
+    let deleteVacationId = null;
 
     function dateKey(date) { const year = date.getFullYear(); const month = String(date.getMonth() + 1).padStart(2, "0"); const day = String(date.getDate()).padStart(2, "0"); return `${year}-${month}-${day}`; }
     function formatDate(date) { return date.toLocaleDateString("es-ES", { weekday: "short", day: "2-digit", month: "2-digit", year: "numeric" }); }
@@ -194,27 +195,25 @@
     async function loadVacations() {
       vacationsByDate = new Map();
     
-      try {
-        const vacationsQuery = query(
-          collection(db, "Vacaciones"),
-          where("EmpleadoId", "==", currentEmployeeId)
-        );
-        const snapshot = await getDocs(vacationsQuery);
+      const vacationsQuery = query(
+        collection(db, "Vacaciones"),
+        where("EmpleadoId", "==", currentEmployeeId)
+      );
+      const snapshot = await getDocs(vacationsQuery);
     
-        snapshot.forEach((vacationSnapshot) => {
-          const vacation = vacationSnapshot.data();
+      snapshot.forEach((vacationSnapshot) => {
+        const vacation = vacationSnapshot.data();
+        const start = new Date(`${vacation.FechaInicio}T12:00:00`);
+        const end = new Date(`${vacation.FechaFin}T12:00:00`);
     
-          let date = new Date(`${vacation.FechaInicio}T12:00:00`);
-          const end = new Date(`${vacation.FechaFin}T12:00:00`);
-    
-          while (date <= end) {
-            vacationsByDate.set(dateKey(date), true);
-            date.setDate(date.getDate() + 1);
-          }
-        });
-      } catch (error) {
-        console.error("Error al cargar las vacaciones:", error);
-      }
+        for (
+          const date = new Date(start);
+          date <= end;
+          date.setDate(date.getDate() + 1)
+        ) {
+          vacationsByDate.set(dateKey(date), vacationSnapshot.id);
+        }
+      });
     }
 
     function toggleDay(dayElement, date) {
@@ -297,6 +296,7 @@
         const key = dateKey(date);
         const shift = shiftsByDate.get(key);
         const isVacation = vacationsByDate.has(key);
+        const vacationId = vacationsByDate.get(key);
     
         const dayElement = document.createElement("button");
         dayElement.type = "button";
@@ -348,7 +348,21 @@
         );
     
         dayElement.addEventListener("click", () => {
+          if (vacationId) {
+            deleteShiftId = null;
+            deleteVacationId = vacationId;
+            deleteShiftBtn.textContent = "Eliminar vacaciones";
+            deleteShiftRow.hidden = false;
+            formStatus.textContent = "Día incluido en un bloque de vacaciones.";
+            formStatus.className = "status";
+            return;
+          }
+          
           if (shift) {
+            deleteVacationId = null;
+            deleteShiftId = shift.id;
+            deleteShiftBtn.textContent = "Eliminar turno";
+            deleteShiftRow.hidden = false;
             formStatus.textContent =
               `Turno asignado: ${formatTime(shift.start)}-${formatTime(shift.end)} · ${shift.puesto || "Sin puesto"}`;
             formStatus.className = "status";
@@ -358,6 +372,7 @@
             return;
           }    
           deleteShiftId = null;
+          deleteVacationId = null;
           deleteShiftRow.hidden = true;
           toggleDay(dayElement, date);
         });    
@@ -411,24 +426,28 @@
     });
 
     deleteShiftBtn.addEventListener("click", async () => {
-      if (!deleteShiftId) return;
-    
-      deleteShiftBtn.disabled = true;
-    
       try {
-        await deleteDoc(doc(db, "Turnos", deleteShiftId));
-    
-        deleteShiftId = null;
-        deleteShiftRow.hidden = true;
-    
-        formStatus.textContent = "Turno eliminado correctamente.";
-        formStatus.className = "status success";
-    
-        await loadMonthShifts();
-        await loadVacations();
+        if (deleteVacationId) {
+          await deleteDoc(doc(db, "Vacaciones", deleteVacationId));
+          deleteVacationId = null;
+      
+          await loadVacations();
+          renderCalendar();
+      
+          formStatus.textContent = "Bloque de vacaciones eliminado.";
+          formStatus.className = "status success";
+        } else if (deleteShiftId) {
+          await deleteDoc(doc(db, "Turnos", deleteShiftId));
+          deleteShiftId = null;
+          deleteShiftRow.hidden = true;
+      
+          formStatus.textContent = "Turno eliminado correctamente.";
+          formStatus.className = "status success";
+          await loadMonthShifts();
+        }
       } catch (error) {
-        console.error("Error al eliminar el turno:", error);
-        formStatus.textContent = "No se pudo eliminar el turno.";
+        console.error("Error al eliminar:", error);
+        formStatus.textContent = "No se pudo eliminar.";
         formStatus.className = "status error";
       } finally {
         deleteShiftBtn.disabled = false;
