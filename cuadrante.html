@@ -132,11 +132,19 @@
     </section>
     <section class="vacation-form" aria-label="Registrar vacaciones">
       <h3>Registrar vacaciones</h3>    
-      <label for="vacationStart">Desde</label>
-      <input id="vacationStart" type="date">    
-      <label for="vacationEnd">Hasta</label>
-      <input id="vacationEnd" type="date">    
-      <button class="btn" id="saveVacationBtn" type="button" disabled>Guardar vacaciones</button>    
+      <div class="vacation-field">
+        <label for="vacationStart">Desde</label>
+        <input id="vacationStart" type="date">
+      </div>
+    
+      <div class="vacation-field">
+        <label for="vacationEnd">Hasta</label>
+        <input id="vacationEnd" type="date">
+      </div>
+    
+      <button class="btn" id="saveVacationBtn" type="button" disabled>
+        Guardar vacaciones
+      </button>  
       <div id="vacationStatus" class="status" role="status"></div>
     </section>
   </main>
