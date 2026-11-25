@@ -153,6 +153,9 @@
     const puestoSelect = document.getElementById("puestoSelect");
     const deleteShiftBtn = document.getElementById("deleteShiftBtn");    
     const deleteShiftRow = document.getElementById("deleteShiftRow");
+    const vacationStart = document.getElementById("vacationStart");
+    const vacationEnd = document.getElementById("vacationEnd");
+    const saveVacationBtn = document.getElementById("saveVacationBtn");
         
     let currentDate = new Date();
     let currentEmployeeId = null;
@@ -170,6 +173,13 @@
       selectedDates.sort();
       selectedDatesDiv.textContent = selectedDates.length ? `Fechas seleccionadas: ${selectedDates.map(key => formatDate(new Date(`${key}T12:00:00`))).join(" · ")}` : "Selecciona uno o varios días del calendario.";
       addShiftBtn.disabled = selectedDates.length === 0 || shiftSelect.value === "" || puestoSelect.value === "";
+    }
+
+    function updateVacationButton() {
+      saveVacationBtn.disabled =
+        vacationStart.value === "" ||
+        vacationEnd.value === "" ||
+        vacationEnd.value < vacationStart.value;
     }
 
     function toggleDay(dayElement, date) {
@@ -377,6 +387,10 @@
         deleteShiftBtn.disabled = false;
       }
     });
+  
+    vacationStart.addEventListener("change", updateVacationButton);
+    vacationEnd.addEventListener("change", updateVacationButton);
+    
     renderCalendar();
   </script>
 </body>
