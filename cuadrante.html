@@ -463,7 +463,10 @@
           FechaInicio: fechaInicio,
           FechaFin: fechaFin
         });
-    
+
+        await loadVacations();
+        renderCalendar();
+        
         vacationStart.value = "";
         vacationEnd.value = "";
         vacationStatus.textContent = "Vacaciones guardadas correctamente.";
