@@ -106,10 +106,11 @@
       .vacation-row, .vacation-field {
         width: 100%;
         min-width: 0;
+        max-width: 100%;
       }
       .vacation-row .btn {
         width: 100%;
-      }
+      }      
     }
     
     .vacation-form { margin-top: 24px; padding-top: 20px; border-top: 2px solid var(--p-light); }
@@ -256,7 +257,7 @@
         const end = new Date(`${vacation.FechaFin}T12:00:00`);
     
         for (
-          const date = new Date(start);
+          let date = new Date(start);
           date <= end;
           date.setDate(date.getDate() + 1)
         ) {
@@ -413,10 +414,7 @@
             deleteShiftRow.hidden = false;
             formStatus.textContent =
               `Turno asignado: ${formatTime(shift.start)}-${formatTime(shift.end)} · ${shift.puesto || "Sin puesto"}`;
-            formStatus.className = "status";
-    
-            deleteShiftId = shift.id;
-            deleteShiftRow.hidden = false;
+            formStatus.className = "status";    
             return;
           }    
           deleteShiftId = null;
@@ -430,18 +428,43 @@
     }
     
     onAuthStateChanged(auth, async (user) => {
-      if (!user) { window.location.href = "index.html"; return; }
-      const userNameDiv = document.getElementById("userName"); const centerDiv = document.getElementById("nameCenter");
+      if (!user) {
+        window.location.href = "index.html";
+        return;
+      }
+    
+      const userNameDiv = document.getElementById("userName");
+      const centerDiv = document.getElementById("nameCenter");
+    
       try {
-        const q = query(collection(db, "Empleados"), where("Correo", "==", user.email));
-        const querySnapshot = await getDocs(q);
-        if (!querySnapshot.empty) {
-          const employeeDocument = querySnapshot.docs[0]; const employee = employeeDocument.data();
-          currentEmployeeId = employee.Id;
-          userNameDiv.textContent = `${employee.Nombre} ${employee.Apellidos}`; centerDiv.textContent = `${employee.Centro} ${employee.Provincia}`;
-        } else userNameDiv.textContent = user.email;
-      } catch (error) { console.error("Error al obtener los datos del empleado:", error); userNameDiv.textContent = user.email; }
-      await loadSchedules(); await loadVacations(); await loadMonthShifts();
+        const employeeQuery = query(
+          collection(db, "Empleados"),
+          where("Correo", "==", user.email)
+        );
+        const querySnapshot = await getDocs(employeeQuery);
+    
+        if (querySnapshot.empty) {
+          userNameDiv.textContent = user.email || "Usuario";
+          formStatus.textContent = "No se encontró el empleado asociado a esta cuenta.";
+          formStatus.className = "status error";
+          return;
+        }
+    
+        const employee = querySnapshot.docs[0].data();
+        currentEmployeeId = employee.Id;
+    
+        userNameDiv.textContent = `${employee.Nombre} ${employee.Apellidos}`;
+        centerDiv.textContent = `${employee.Centro} ${employee.Provincia}`;
+    
+        await loadSchedules();
+        await loadVacations();
+        await loadMonthShifts();
+      } catch (error) {
+        console.error("Error al inicializar los datos del empleado:", error);
+        userNameDiv.textContent = user.email || "Usuario";
+        formStatus.textContent = "No se pudieron cargar los datos.";
+        formStatus.className = "status error";
+      }
     });
 
     document.getElementById("logoutBtn").addEventListener("click", () => signOut(auth));
@@ -474,6 +497,8 @@
     });
 
     deleteShiftBtn.addEventListener("click", async () => {
+      if (!deleteVacationId && !deleteShiftId) return;
+      deleteShiftBtn.disabled = true;
       try {
         if (deleteVacationId) {
           await deleteDoc(doc(db, "Vacaciones", deleteVacationId));
